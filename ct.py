@@ -9,7 +9,8 @@ import os
 script_dir    = os.path.dirname(__file__)
 save_path     = os.path.join(script_dir, "data.txt")
 skin_save_path = os.path.join(script_dir, "skins_save.txt")
- 
+player_color = (255, 255, 0)
+
 WINDOW_W = 500
 WINDOW_H = 535
 HUD_H    = 35
@@ -60,13 +61,12 @@ GOAL_COLOR = (30, 160, 30)
 FPS        = 60
 SKIN_COST  = 10
  
-# lerp factors (per frame at 60 fps; scaled by dt each tick)
+# larp factors (per frame at 60 fps; scaled by dt each tick)
 LERP_CAM    = 0.12
 LERP_PLAYER = 0.18
  
 pygame.mixer.init()
-sound_200 = pygame.mixer.Sound("200.wav")
-sound_300 = pygame.mixer.Sound("300.wav")
+
  
 # ── Maze ─────────────────────────────────────────────────────────────────────
 DIRS = {
@@ -290,20 +290,7 @@ def main():
     running = True
     while running:
         dt = clock.tick(FPS) / 1000.0
- 
-        # sound triggers
-        if steps >= 300 and not played_300:
-            sound_300.play(); played_300 = True
-        elif steps >= 200 and not played_200:
-            sound_200.play(); played_200 = True
- 
-        # player colour
-        if steps >= 300:
-            player_color = (255, 0, 0)
-        elif steps >= 200:
-            player_color = (255, 126, 0)
-        else:
-            player_color = (0, 150, 30)
+
  
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -393,13 +380,13 @@ def main():
         elapsed = time.time() - start_t
         pygame.draw.rect(screen, (255, 255, 255), (0, VIEW_H, WINDOW_W, HUD_H))
         hud = font.render(
-            f"Steps:{steps}  Time:{int(elapsed)}s  Wins:{wins}  R=new  C=menu",
+            f"Time:{int(elapsed)}s",
             True, (10, 10, 10))
         screen.blit(hud, (8, VIEW_H + 9))
  
         # win overlay
         if won:
-            msg      = f"Won in {steps} steps & {int(win_time)}s!  R=new  C=menu"
+            msg      = f"Won in {steps} steps & {int(win_time)}s!  R = Replay  C = Menu"
             win_surf = small_font.render(msg, True, (0, 0, 0))
             wrect    = win_surf.get_rect(center=(WINDOW_W // 2, VIEW_H // 2))
             overlay  = pygame.Surface((wrect.width + 20, wrect.height + 20))
